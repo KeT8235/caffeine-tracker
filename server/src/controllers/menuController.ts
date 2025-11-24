@@ -20,7 +20,7 @@ export const getMenusByBrand = async (req: Request, res: Response) => {
     const { brandId } = req.params;
 
     const [menus] = await pool.query(
-      `SELECT m.*, b.brand_name 
+      `SELECT m.menu_id, m.menu_name, m.temp, m.size, m.caffeine_mg, m.menu_photo, m.category, b.brand_name 
        FROM menu m 
        JOIN brand b ON m.brand_id = b.brand_id 
        WHERE m.brand_id = ? 
@@ -39,7 +39,7 @@ export const getMenusByBrand = async (req: Request, res: Response) => {
 export const getAllMenus = async (req: Request, res: Response) => {
   try {
     const [menus] = await pool.query(
-      `SELECT m.*, b.brand_name 
+      `SELECT m.menu_id, m.menu_name, m.temp, m.size, m.caffeine_mg, m.menu_photo, m.category, b.brand_name 
        FROM menu m 
        JOIN brand b ON m.brand_id = b.brand_id 
        ORDER BY b.brand_name, m.category, m.menu_name, m.size`,
@@ -62,7 +62,7 @@ export const searchMenus = async (req: Request, res: Response) => {
     }
 
     const [menus] = await pool.query(
-      `SELECT m.*, b.brand_name 
+      `SELECT m.menu_id, m.menu_name, m.temp, m.size, m.caffeine_mg, m.menu_photo, m.category, b.brand_name 
        FROM menu m 
        JOIN brand b ON m.brand_id = b.brand_id 
        WHERE m.menu_name LIKE ? OR b.brand_name LIKE ?

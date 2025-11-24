@@ -43,6 +43,21 @@ export function OnboardingScreen({
     password: "",
   });
 
+  const handleBirthDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/[^0-9]/g, "");
+    if (value.length > 8) value = value.slice(0, 8);
+
+    let formatted = value;
+    if (value.length > 4) {
+      formatted = `${value.slice(0, 4)}-${value.slice(4)}`;
+    }
+    if (value.length > 6) {
+      formatted = `${formatted.slice(0, 7)}-${formatted.slice(7)}`;
+    }
+
+    setSignupForm({ ...signupForm, birthDate: formatted });
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError(""); // 에러 메시지 초기화
@@ -350,7 +365,7 @@ export function OnboardingScreen({
           <DialogHeader>
             <DialogTitle className="text-center">회원가입</DialogTitle>
             <DialogDescription className="text-center text-muted-foreground">
-              AI 카페인 어드바이저에 가입하여 맞춤형 추천을 받아보세요
+              체카블에 가입하여 맞춤형 추천을 받아보세요!
             </DialogDescription>
           </DialogHeader>
 
@@ -413,13 +428,13 @@ export function OnboardingScreen({
               <Label htmlFor="signup-birthdate">생년월일</Label>
               <Input
                 id="signup-birthdate"
-                type="date"
-                placeholder="YYYY-MM-DD"
+                type="text"
+                inputMode="numeric"
+                placeholder="생년월일 8자리 (예: 19901231)"
                 className="h-12 rounded-xl"
                 value={signupForm.birthDate}
-                onChange={(e) =>
-                  setSignupForm({ ...signupForm, birthDate: e.target.value })
-                }
+                onChange={handleBirthDateChange}
+                maxLength={10}
                 required
               />
               <p className="text-sm text-gray-500 mt-1">

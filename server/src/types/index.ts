@@ -28,6 +28,8 @@ export interface Menu {
   category: "coffee" | "decaf";
   size: "small" | "regular" | "large";
   caffeine_mg: number;
+  menu_photo?: string;
+  temp?: string;
 }
 
 export interface CaffeineHistory {
@@ -59,4 +61,6 @@ export interface AddCaffeineRequest {
   brand_name: string;
   menu_name: string;
   caffeine_mg: number;
+  temp?: string;
+  menu_photo?: string;
 }

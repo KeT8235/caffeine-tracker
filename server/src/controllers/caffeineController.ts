@@ -58,8 +58,10 @@ export const deleteTodayCaffeine = async (req: Request, res: Response) => {
 export const addCaffeineIntake = async (req: Request, res: Response) => {
   try {
     const memberId = (req as any).user.memberId;
-    const { menu_id, brand_name, menu_name, caffeine_mg }: AddCaffeineRequest =
-      req.body;
+    const { menu_id, brand_name, menu_name, caffeine_mg, temp }: AddCaffeineRequest = req.body;
+
+    // 로그로 실제 값 확인
+    console.log('[addCaffeineIntake] payload:', { menu_id, temp, brand_name, menu_name, caffeine_mg });
 
     if (!brand_name || !menu_name || !caffeine_mg) {
       return res.status(400).json({ error: "필수 정보를 입력해주세요." });
@@ -68,9 +70,9 @@ export const addCaffeineIntake = async (req: Request, res: Response) => {
     // 섭취 기록 저장
     await pool.query(
       `INSERT INTO caffeine_history 
-       (member_id, menu_id, brand_name, menu_name, caffeine_mg, drinked_at) 
-       VALUES (?, ?, ?, ?, ?, NOW())`,
-      [memberId, menu_id || null, brand_name, menu_name, caffeine_mg],
+       (member_id, menu_id, brand_name, menu_name, caffeine_mg, temp, drinked_at) 
+       VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+      [memberId, menu_id || null, brand_name, menu_name, caffeine_mg, temp || null],
     );
 
     // 현재 누적 카페인 업데이트
@@ -104,10 +106,12 @@ export const getTodayHistory = async (req: Request, res: Response) => {
     const memberId = (req as any).user.memberId;
 
     const [history] = await pool.query(
-      `SELECT * FROM caffeine_history 
-       WHERE member_id = ? 
-       AND DATE(drinked_at) = CURDATE() 
-       ORDER BY drinked_at DESC`,
+      `SELECT ch.*, m.menu_photo 
+       FROM caffeine_history ch
+       LEFT JOIN menu m ON ch.menu_id = m.menu_id
+       WHERE ch.member_id = ? 
+       AND DATE(ch.drinked_at) = CURDATE() 
+       ORDER BY ch.drinked_at DESC`,
       [memberId],
     );
 
@@ -124,15 +128,18 @@ export const getHistory = async (req: Request, res: Response) => {
     const memberId = (req as any).user.memberId;
     const { startDate, endDate } = req.query;
 
-    let query = "SELECT * FROM caffeine_history WHERE member_id = ?";
+    let query = `SELECT ch.*, m.menu_photo 
+                 FROM caffeine_history ch
+                 LEFT JOIN menu m ON ch.menu_id = m.menu_id
+                 WHERE ch.member_id = ?`;
     const params: any[] = [memberId];
 
     if (startDate && endDate) {
-      query += " AND DATE(drinked_at) BETWEEN ? AND ?";
+      query += " AND DATE(ch.drinked_at) BETWEEN ? AND ?";
       params.push(startDate, endDate);
     }
 
-    query += " ORDER BY drinked_at DESC";
+    query += " ORDER BY ch.drinked_at DESC";
 
     const [history] = await pool.query(query, params);
     res.json(history);

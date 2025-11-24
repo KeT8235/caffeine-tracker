@@ -52,6 +52,7 @@ async function runMigration() {
       password: MYSQL_PASS,
       database: MYSQL_DB,
       multipleStatements: true,
+      port: parseInt(process.env.DB_PORT || '3306'),
     });
     console.log('✓ 데이터베이스 연결 성공');
     

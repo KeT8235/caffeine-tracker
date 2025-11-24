@@ -76,6 +76,9 @@ export function CaffeineProvider({ children }: { children: ReactNode }) {
             drink: h.menu_name,
             caffeine: h.caffeine_mg,
             timestamp: new Date(h.drinked_at),
+            menu_photo: h.menu_photo,
+            menu_id: h.menu_id ?? undefined,
+            temp: h.temp ?? undefined,
           }))
           .sort(
             (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
@@ -184,9 +187,11 @@ export function CaffeineProvider({ children }: { children: ReactNode }) {
     // 2. 서버에 저장 및 동기화
     try {
       await caffeineAPI.addIntake({
+        menu_id: entry.menu_id,
         brand_name: entry.brand,
         menu_name: entry.drink,
         caffeine_mg: entry.caffeine,
+        temp: entry.temp,
       });
       if (fetchAndUpdateRef.current) {
         await fetchAndUpdateRef.current();

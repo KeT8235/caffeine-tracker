@@ -547,61 +547,69 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
           {recentEntries.length > 0 ? (
             <div className="space-y-2">
               {recentEntries.map((entry, index) => (
-                  <motion.div
-                    key={entry.id}
-                    whileHover={{ x: 4 }}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ type: "spring", stiffness: 300, delay: index * 0.05 }}
-                  >
-                    <Card
-                      className="p-4 bg-card"
-                      onClick={() =>
-                        addCaffeine({
+                <motion.div
+                  key={entry.id}
+                  whileHover={{ x: 4 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ type: "spring", stiffness: 300, delay: index * 0.05 }}
+                >
+                  <Card 
+                    className="p-4 bg-card flex items-center justify-between cursor-pointer hover:bg-secondary/20 transition-colors"
+                    onClick={async () => {
+                      try {
+                        await addCaffeine({
                           brand: entry.brand,
                           drink: entry.drink,
                           caffeine: entry.caffeine,
-                        })
+                          menu_id: entry.menu_id,
+                          temp: entry.temp,
+                        });
+                        toast.success(`${entry.drink}이(가) 추가되었습니다.`);
+                      } catch (error) {
+                        toast.error("음료 추가 중 오류가 발생했습니다.");
                       }
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="bg-primary/10 rounded-xl p-2 flex items-center justify-center">
-                            {(() => {
-                              const key = `${entry.brand}-${entry.drink}`;
-                              const imgSrc = recentDrinkImages[key];
-                              return imgSrc ? (
-                                <img
-                                  src={imgSrc}
-                                  alt={entry.drink}
-                                  className="w-6 h-6 rounded object-cover"
-                                />
-                              ) : (
-                                <Coffee className="w-5 h-5 text-primary" />
-                              );
-                            })()}
-                          </div>
-                          <div>
-                            <p>{entry.drink}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {entry.brand} • {entry.caffeine}mg
-                            </p>
-                          </div>
-                        </div>
-                        <span className="text-xs text-muted-foreground">
-                          {new Date(entry.timestamp).toLocaleTimeString(
-                            "ko-KR",
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            },
-                          )}
-                        </span>
+                    }}
+                  >
+                    <div className="flex items-center space-x-3">
+                      {/* 음료 사진 (menu_photo) */}
+                      <div className="bg-primary/10 rounded-xl p-2 flex items-center justify-center">
+                        {entry.menu_photo ? (
+                          <img
+                            src={entry.menu_photo}
+                            alt={entry.drink}
+                            className="w-8 h-8 rounded object-cover"
+                          />
+                        ) : (
+                          <Coffee className="w-6 h-6 text-primary" />
+                        )}
                       </div>
-                    </Card>
-                  </motion.div>
-                ))}
+                      <div>
+                        <p className="font-medium">{entry.drink}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {entry.brand}
+                          {/* 브랜드 로고 (brand_photo) */}
+                          {entry.brand_photo && (
+                            <img
+                              src={entry.brand_photo}
+                              alt={entry.brand + " 로고"}
+                              className="inline-block w-5 h-5 ml-1 rounded-full object-contain align-middle"
+                            />
+                          )}
+                          &nbsp;• {entry.caffeine}mg
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {(() => {
+                        const date = new Date(entry.timestamp);
+                        return date.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" });
+                      })()}
+                    </span>
+                  </Card>
+                </motion.div>
+              ))}
             </div>
           ) : (
             <Card className="p-6 bg-card text-center">

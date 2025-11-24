@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3001;
 
 // 미들웨어
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: process.env.CLIENT_URL || "http://localhost:3000",
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' })); // 프로필 사진 업로드를 위해 limit 증가

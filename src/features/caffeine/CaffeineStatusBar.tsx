@@ -49,7 +49,7 @@ export function CaffeineStatusBar() {
           </span>
         </div>
         <span className="text-sm text-muted-foreground">
-          {currentIntake} / {dailyLimit} mg
+          {Number(currentIntake.toFixed(1))} / {dailyLimit} mg
         </span>
       </div>
       <div className="relative h-2 bg-secondary/30 rounded-full overflow-hidden">

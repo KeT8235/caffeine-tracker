@@ -8,6 +8,10 @@ export interface CaffeineEntry {
   drink: string;
   caffeine: number;
   timestamp: Date;
+  menu_photo?: string;
+  brand_photo?: string;
+  menu_id?: number;
+  temp?: string;
 }
 
 export interface Friend {

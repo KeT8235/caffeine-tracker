@@ -21,11 +21,12 @@ interface TrackingScreenProps {
 }
 
 export function TrackingScreen({ onBack }: TrackingScreenProps) {
+    const [selectedTemp, setSelectedTemp] = useState<string>("");
   const { currentIntake, remainingCaffeine, addCaffeine } = useCaffeine();
   const [brands, setBrands] = useState<
-    Array<{ brand_id: number; brand_name: string }>
+    Array<{ brand_id: number; brand_name: string; brand_photo?: string }>
   >([]);
-  const [menus, setMenus] = useState<Array<any>>([]);
+  const [menus, setMenus] = useState<Array<{ menu_id: number; menu_name: string; temp:string; size: string; caffeine_mg: number; menu_photo?: string; decaf?: boolean }>>([]);
   const [customMenus, setCustomMenus] = useState<Array<any>>([]);
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedMenu, setSelectedMenu] = useState<any>(null);
@@ -34,55 +35,6 @@ export function TrackingScreen({ onBack }: TrackingScreenProps) {
   const [isCustom, setIsCustom] = useState(false);
   const [customName, setCustomName] = useState("");
   const [customCaffeine, setCustomCaffeine] = useState("");
-
-  // 브랜드별 로고 매핑 (이미지 파일은 public 또는 assets 경로에 추가 필요)
-  const brandLogos: Record<string, string> = {
-    메가:
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzR0wjnOUmM_UAQUxykbmyBHAhxUCxAkIZUw&s",
-    스타벅스: 
-    "https://i.namu.wiki/i/9p8OVxJTce_f2HnuZF1QOU6qMSHqXBHdkcx3q_hlGxvhcyaOXKxBVyoDkeg-Cb4Nx2p60W0AUh6RzjAH59vHwQ.svg",
-    컴포즈:
-    "https://logo-resources.thevc.kr/organizations/200x200/790852d50c38093de194f6812c293d68d3bf1ab8b40ef405a391f2add378072b_1719894440052977.jpg",
-  };
-
-  // 특정 메뉴(예: 컴포즈 아메리카노 regular) 이미지 매핑
-  const menuImages: Record<string, string> = {
-    "메가-아메리카노-regular":
-    "https://img.79plus.co.kr/megahp/manager/upload/menu/20250320000925_1742396965069_ekSqAIVc1L.jpg",
-    "메가-아메리카노-large":
-    "https://cdn.dailycnc.com/news/photo/201607/58081_167995_1856.jpg",
-    "메가-에스프레소-regular":
-    "https://img.79plus.co.kr/megahp/manager/upload/menu/20250320002019_1742397619030_g5iEBTRsp7.jpg",
-    "메가-카페라떼-regular":
-    "https://img.79plus.co.kr/megahp/manager/upload/menu/20250320004527_1742399127150_aZXw3Wbf4H.jpg",
-    "메가-카페라떼-large":
-    "https://img2.joongna.com/cafe-article-data/live/2024/01/09/1034198834/1704760360421_000_TWRPy_main.jpg",
-    "스타벅스-아메리카노-small":
-    "https://cdn.thescoop.co.kr/news/photo/201208/2696_1638_425.jpg",
-    "스타벅스-아메리카노-regular":
-    "https://img1.kakaocdn.net/thumb/C305x305@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-    "스타벅스-아메리카노-large":
-    "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000002487]_20210426091745467.jpg",
-    "스타벅스-에스프레소-small":
-    "https://www.nespresso.com/shared_res/agility/global/coffees/vl/sku-main-info-product/starbucks-espresso-roast_2x.png?impolicy=medium&imwidth=824&imdensity=1",  
-    "스타벅스-카페라떼-small":
-    "https://image.istarbucks.co.kr/upload/store/skuimg/2024/09/[9200000005520]_20240919155241398.jpg",
-    "스타벅스-카페라떼-regular":
-    "https://image.istarbucks.co.kr/upload/store/skuimg/2024/09/[9200000005520]_20240919155241398.jpg",
-    "스타벅스-카페라떼-large":
-    "https://image.istarbucks.co.kr/upload/store/skuimg/2024/09/[9200000005520]_20240919155241398.jpg",
-    "컴포즈-아메리카노-regular":
-    "https://img.danawa.com/prod_img/500000/312/718/img/13718312_1.jpg?_v=20240103134302",
-    "컴포즈-아메리카노-large":
-    "https://composecoffee.com/files/attach/images/152/253/097/e697ebc13a026e224f0f149d2e777668.jpg",
-    "컴포즈-에스프레소-regular":
-    "https://composecoffee.com/files/thumbnails/208/1515x2083.crop.jpg?t=1733792158",
-    // 카페라떼 (regular) 이미지 - 사용자 제공 data URL
-    "컴포즈-카페라떼-regular":
-    "https://composecoffee.com/files/attach/images/152/459/038/bee8306016d78d10e673d14a6d8e30d8.jpg",
-    "컴포즈-콜드브루-regular":
-    "https://composecoffee.com/files/thumbnails/627/038/1515x2083.crop.jpg?t=1761948671"
-  };
 
   // DB에서 브랜드 목록 로드
   useEffect(() => {
@@ -111,27 +63,32 @@ export function TrackingScreen({ onBack }: TrackingScreenProps) {
         setIsCustom(false);
         return;
       }
-
-      // "직접 입력" 선택 시
       if (selectedBrand === "custom") {
         setIsCustom(true);
         setMenus([]);
         return;
       }
-
       setIsCustom(false);
       try {
         const data = await menuAPI.getMenusByBrand(parseInt(selectedBrand));
-        // 같은 메뉴 이름 + 사이즈는 하나만 보이도록 중복 제거
-        const seen = new Set<string>();
+        // menu_id 기준으로 중복 제거 (DB에서 menu_id는 유일함)
+        const seen = new Set<number>();
         const uniqueMenus = data.filter((menu: any) => {
-          const key = `${menu.menu_name}-${menu.size}`;
-          if (seen.has(key)) return false;
-          seen.add(key);
+          if (seen.has(menu.menu_id)) return false;
+          seen.add(menu.menu_id);
           return true;
         });
-
-        setMenus(uniqueMenus);
+        // temp와 decaf 속성 변환 (ENUM 타입이므로 hot/ice만 허용, 그 외는 빈값 처리)
+        const menusWithFlags = uniqueMenus.map((menu: any) => {
+          let tempValue = typeof menu.temp === "string" ? menu.temp.toLowerCase() : "";
+          if (tempValue !== "hot" && tempValue !== "ice") tempValue = "";
+          return {
+            ...menu,
+            temp: tempValue,
+            decaf: String(menu.category).toLowerCase() === "decaf",
+          };
+        });
+        setMenus(menusWithFlags);
       } catch (error) {
         console.error("Failed to load menus:", error);
         toast.error("메뉴 목록을 불러올 수 없습니다.");
@@ -202,11 +159,20 @@ export function TrackingScreen({ onBack }: TrackingScreenProps) {
       brands.find((b) => b.brand_id.toString() === selectedBrand)?.brand_name ||
       "Unknown";
     const menuName = selectedMenu?.menu_name || "Custom Drink";
+    const menuPhoto = selectedMenu?.menu_photo || null;
+    const menuId = selectedMenu?.menu_id || null;
+    const temp = selectedMenu?.temp || null;
+
+    // 로그로 실제 값 확인
+    console.log('[addCaffeine] payload:', { menu_id: menuId, temp, brandName, menuName, amount });
 
     addCaffeine({
       brand: brandName,
       drink: menuName,
       caffeine: amount,
+      menu_photo: menuPhoto,
+      menu_id: menuId,
+      temp: temp,
     });
 
     // Reset form to allow adding more drinks
@@ -291,24 +257,33 @@ export function TrackingScreen({ onBack }: TrackingScreenProps) {
                       key={brand.brand_id}
                       value={brand.brand_id.toString()}
                     >
-                      <span>{brand.brand_name}</span>
+                      <span className="flex items-center gap-2">
+                        {brand.brand_photo ? (
+                          <img
+                            src={brand.brand_photo}
+                            alt={`${brand.brand_name} 로고`}
+                            className="w-6 h-6 rounded-full object-contain bg-white border border-border"
+                            style={{ minWidth: 24, minHeight: 24 }}
+                          />
+                        ) : null}
+                        <span>{brand.brand_name}</span>
+                      </span>
                     </SelectItem>
                   ))}
                   <SelectItem value="custom">
-                    <span className="text-primary font-medium">✏️ 직접 입력</span>
+                    <span className="flex items-center gap-2 text-primary font-medium">
+                      <span role="img" aria-label="edit">✏️</span> 직접 입력
+                    </span>
                   </SelectItem>
                 </SelectContent>
               </Select>
 
-              {/* 선택된 브랜드 로고 표시 */}
+              {/* 선택된 브랜드 로고 표시 (DB에서 가져온 brand_photo 사용) */}
               {selectedBrand && selectedBrand !== "custom" && (() => {
                 const currentBrand = brands.find(
                   (b) => b.brand_id.toString() === selectedBrand,
                 );
-                const logoSrc = currentBrand
-                  ? brandLogos[currentBrand.brand_name]
-                  : undefined;
-
+                const logoSrc = currentBrand?.brand_photo;
                 return (
                   logoSrc && (
                     <img
@@ -433,58 +408,112 @@ export function TrackingScreen({ onBack }: TrackingScreenProps) {
               animate={{ opacity: 1, height: "auto" }}
               transition={{ duration: 0.3 }}
             >
-              <Label htmlFor="menu">음료 선택</Label>
+              {/* 온도 선택 드롭다운 */}
+              <Label htmlFor="temp">온도 선택</Label>
               <Select
-                value={selectedMenu?.menu_id.toString() || ""}
-                onValueChange={handleMenuSelect}
+                value={selectedTemp}
+                onValueChange={setSelectedTemp}
               >
-                <SelectTrigger id="menu" className="h-12 rounded-xl bg-card">
-                  <SelectValue placeholder="음료를 선택하세요..." />
+                <SelectTrigger id="temp" className="h-12 rounded-xl bg-card">
+                  <SelectValue placeholder="핫/아이스를 선택하세요..." />
                 </SelectTrigger>
                 <SelectContent>
-                  {menus.map((menu) => (
-                    <SelectItem
-                      key={menu.menu_id}
-                      value={menu.menu_id.toString()}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span>
-                          {menu.menu_name} ({menu.size})
-                        </span>
-                        <span className="text-xs text-muted-foreground ml-4">
-                          {menu.caffeine_mg}mg
-                        </span>
-                      </div>
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="hot">
+                    <span className="inline-flex items-center gap-2">
+                      <span role="img" aria-label="hot">🔥</span> 핫
+                    </span>
+                  </SelectItem>
+                  <SelectItem value="ice">
+                    <span className="inline-flex items-center gap-2">
+                      <span role="img" aria-label="ice">❄️</span> 아이스
+                    </span>
+                  </SelectItem>
                 </SelectContent>
               </Select>
 
-               {/* 선택된 메뉴 이미지 (컴포즈 아메리카노 regular 등) */}
-               {selectedMenu && (() => {
-                 const currentBrand = brands.find(
-                   (b) => b.brand_id.toString() === selectedBrand,
-                 );
-                 const key = `${currentBrand?.brand_name}-${selectedMenu.menu_name}-${selectedMenu.size}`;
-                 const imgSrc = key && menuImages[key];
+              {/* 온도 선택 후 메뉴 선택 */}
+              {selectedTemp && (
+                <>
+                  <Label htmlFor="menu">음료 선택</Label>
+                  <Select
+                    value={selectedMenu?.menu_id?.toString() || ""}
+                    onValueChange={handleMenuSelect}
+                  >
+                    <SelectTrigger id="menu" className="h-12 rounded-xl bg-card">
+                      <SelectValue placeholder="음료를 선택하세요..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {menus.filter((menu) => menu.temp === selectedTemp).map((menu) => (
+                        <SelectItem
+                          key={menu.menu_id}
+                          value={menu.menu_id.toString()}
+                        >
+                          <div className="flex items-center justify-between w-full">
+                            <span className="flex items-center gap-2">
+                              <span
+                                style={{
+                                  color: menu.temp === "hot" ? "#e57373" : menu.temp === "ice" ? "#64b5f6" : undefined,
+                                  fontWeight: "bold",
+                                  marginRight: 4,
+                                }}
+                              >
+                                {menu.temp === "hot"
+                                  ? "뜨거움"
+                                  : menu.temp === "ice"
+                                  ? "차가움"
+                                  : menu.temp}
+                              </span>
+                              <span>{menu.menu_name} ({menu.size})</span>
+                              {menu.decaf ? (
+                                <span
+                                  className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-bold shadow-sm border border-green-300"
+                                >
+                                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#43a047"/><text x="50%" y="55%" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold" dy=".3em">D</text></svg>
+                                  디카페인
+                                </span>
+                              ) : (
+                                <span
+                                  className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold shadow-sm border border-yellow-300"
+                                >
+                                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="#fbc02d"/><text x="50%" y="55%" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold" dy=".3em">C</text></svg>
+                                  카페인
+                                </span>
+                              )}
+                            </span>
+                            <span className="text-xs text-muted-foreground ml-4">
+                              {menu.caffeine_mg}mg
+                            </span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-                 return (
-                   imgSrc && (
-                     <motion.div 
-                       className="mt-3 flex justify-center"
-                       whileHover={{ scale: 1.05 }}
-                       whileTap={{ scale: 0.95 }}
-                     >
-                       <img
-                         src={imgSrc}
-                         alt={`${currentBrand?.brand_name} ${selectedMenu.menu_name}`}
-                         className="w-32 h-32 rounded-xl object-cover bg-white shadow-sm cursor-pointer hover:shadow-lg transition-shadow"
-                         onClick={handleAddCaffeine}
-                       />
-                     </motion.div>
-                   )
-                 );
-               })()}
+                  {/* 선택된 메뉴 이미지 (DB에서 가져온 menu_photo 사용) */}
+                  {selectedMenu && (
+                    <motion.div 
+                      className="mt-3 flex justify-center relative"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <img
+                        src={selectedMenu.menu_photo && selectedMenu.menu_photo !== 'NULL' ? selectedMenu.menu_photo : "https://cdn.jsdelivr.net/gh/kimsocode/caffeine-tracker-assets/no-image-128.png"}
+                        alt={selectedMenu.menu_photo && selectedMenu.menu_photo !== 'NULL' ? `${selectedMenu.menu_name} 이미지` : "이미지 없음"}
+                        className="w-32 h-32 rounded-2xl object-cover bg-white shadow-lg cursor-pointer transition-shadow border-2 border-primary/30"
+                        onClick={handleAddCaffeine}
+                        style={{ opacity: selectedMenu.menu_photo && selectedMenu.menu_photo !== 'NULL' ? 1 : 0.3 }}
+                        onError={(e) => {
+                          e.currentTarget.src = "https://cdn.jsdelivr.net/gh/kimsocode/caffeine-tracker-assets/no-image-128.png";
+                        }}
+                      />
+                      {/* 음료명 오버레이 */}
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white px-4 py-1 rounded-full text-sm font-semibold shadow" style={{zIndex:2}}>
+                        {selectedMenu.menu_name} ({selectedMenu.size})
+                      </div>
+                    </motion.div>
+                  )}
+                </>
+              )}
             </motion.div>
           )}
         </motion.div>

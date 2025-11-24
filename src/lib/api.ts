@@ -112,6 +112,8 @@ export const menuAPI = {
         category: "coffee" | "decaf";
         size: "small" | "regular" | "large";
         caffeine_mg: number;
+          menu_photo: string | null;
+          temp: "hot" | "ice" | null;
       }>
     >(`/brands/${brandId}/menus`);
   },
@@ -186,6 +188,7 @@ export const caffeineAPI = {
     brand_name: string;
     menu_name: string;
     caffeine_mg: number;
+    temp?: string;
   }) => {
     return apiRequest<{
       message: string;
@@ -209,6 +212,8 @@ export const caffeineAPI = {
         menu_name: string;
         caffeine_mg: number;
         drinked_at: string;
+        menu_photo?: string;
+        temp?: string;
       }>
     >("/caffeine/today");
   },
