@@ -1,0 +1,445 @@
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  ChevronLeft,
+  UserPlus,
+  Trophy,
+  TrendingUp,
+  TrendingDown,
+  Bell,
+  Check,
+  X,
+} from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import type { Friend } from "@/types";
+import { useState, useEffect, type ChangeEvent, type KeyboardEvent } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { friendAPI } from "@/lib/api";
+
+interface FriendsScreenProps {
+  onBack: () => void;
+  onFriendClick: (friend: Friend) => void;
+}
+
+export function FriendsScreen({ onBack, onFriendClick }: FriendsScreenProps) {
+  const [showAddFriend, setShowAddFriend] = useState(false);
+  const [friendId, setFriendId] = useState("");
+
+  const friends: Friend[] = [
+    {
+      id: 1,
+      name: "김민준",
+      initials: "KM",
+      caffeineLevel: 320,
+      avatarColor: "from-red-500 to-orange-500",
+      trend: "up",
+      lastDrink: "30분 전",
+      rank: 1,
+    },
+    {
+      id: 2,
+      name: "이서연",
+      initials: "LS",
+      caffeineLevel: 85,
+      avatarColor: "from-green-500 to-emerald-500",
+      trend: "down",
+      lastDrink: "3시간 전",
+    },
+    {
+      id: 3,
+      name: "박지호",
+      initials: "PJ",
+      caffeineLevel: 180,
+      avatarColor: "from-yellow-500 to-amber-500",
+      trend: "up",
+      lastDrink: "1시간 전",
+    },
+    {
+      id: 4,
+      name: "최수아",
+      initials: "CS",
+      caffeineLevel: 45,
+      avatarColor: "from-green-400 to-teal-500",
+      trend: "down",
+      lastDrink: "5시간 전",
+    },
+    {
+      id: 5,
+      name: "정우진",
+      initials: "JW",
+      caffeineLevel: 250,
+      avatarColor: "from-orange-500 to-yellow-500",
+      trend: "stable",
+      lastDrink: "45분 전",
+    },
+    {
+      id: 6,
+      name: "강예린",
+      initials: "KY",
+      caffeineLevel: 140,
+      avatarColor: "from-yellow-400 to-orange-400",
+      trend: "up",
+      lastDrink: "2시간 전",
+    },
+    {
+      id: 7,
+      name: "한도윤",
+      initials: "HD",
+      caffeineLevel: 60,
+      avatarColor: "from-green-500 to-lime-500",
+      trend: "down",
+      lastDrink: "4시간 전",
+    },
+  ];
+
+  const getCaffeineStatus = (level: number) => {
+    if (level >= 300) {
+      return {
+        color: "bg-red-500",
+        label: "높음",
+        textColor: "text-red-600",
+        bgColor: "bg-red-50",
+        borderColor: "border-red-200",
+      };
+    } else if (level >= 100) {
+      return {
+        color: "bg-yellow-500",
+        label: "주의",
+        textColor: "text-yellow-700",
+        bgColor: "bg-yellow-50",
+        borderColor: "border-yellow-200",
+      };
+    } else {
+      return {
+        color: "bg-green-500",
+        label: "안전",
+        textColor: "text-green-600",
+        bgColor: "bg-green-50",
+        borderColor: "border-green-200",
+      };
+    }
+  };
+
+  const sortedFriends = [...friends].sort(
+    (a, b) => b.caffeineLevel - a.caffeineLevel,
+  );
+  const myRank = 3;
+  const myCaffeineLevel = 120;
+
+  const handleAddFriend = () => {
+    if (friendId.trim()) {
+      toast.success("친구 추가 요청을 보냈습니다!", {
+        description: `${friendId}님에게 친구 요청을 보냈습니다.`,
+      });
+      setShowAddFriend(false);
+      setFriendId("");
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-full bg-background">
+      {/* Header */}
+      <div className="sticky top-0 bg-background/95 backdrop-blur-sm z-10 px-6 pt-6 pb-4 border-b border-border/50">
+        <div className="flex items-center justify-between mb-2">
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={onBack}
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </Button>
+          </motion.div>
+
+          <h1 className="text-[24px]">친구 카페인 현황</h1>
+
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={() => setShowAddFriend(true)}
+            >
+              <UserPlus className="w-6 h-6" />
+            </Button>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+        {/* My Rank Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Card className="p-5 bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="relative">
+                  <Avatar className="w-16 h-16 border-3 border-primary">
+                    <div className="w-full h-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                      <span className="text-primary-foreground text-[20px]">
+                        나
+                      </span>
+                    </div>
+                  </Avatar>
+                  <div
+                    className={`absolute -bottom-1 -right-1 w-5 h-5 ${getCaffeineStatus(myCaffeineLevel).color} rounded-full border-2 border-background shadow-md`}
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center space-x-2 mb-1">
+                    <span className="text-[18px]">나의 현황</span>
+                    <Badge
+                      className={`${getCaffeineStatus(myCaffeineLevel).bgColor} ${getCaffeineStatus(myCaffeineLevel).textColor} border-0`}
+                    >
+                      {getCaffeineStatus(myCaffeineLevel).label}
+                    </Badge>
+                  </div>
+                  <div className="flex items-baseline space-x-2">
+                    <span
+                      className={`text-[24px] ${getCaffeineStatus(myCaffeineLevel).textColor}`}
+                    >
+                      {myCaffeineLevel}
+                    </span>
+                    <span className="text-sm text-muted-foreground">mg</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-right">
+                <div className="flex items-center justify-end space-x-1 mb-1">
+                  <Trophy className="w-5 h-5 text-primary" />
+                  <span className="text-sm text-muted-foreground">순위</span>
+                </div>
+                <div className="text-[28px] text-primary">#{myRank}</div>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* Friends List Header */}
+        <div className="flex items-center justify-between px-1">
+          <h3 className="text-[18px]">친구 목록</h3>
+          <span className="text-sm text-muted-foreground">
+            {friends.length}명
+          </span>
+        </div>
+
+        {/* Friends List */}
+        <div className="space-y-2">
+          {sortedFriends.map((friend, index) => {
+            const status = getCaffeineStatus(friend.caffeineLevel);
+
+            return (
+              <motion.div
+                key={friend.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.01, x: 4 }}
+                  whileTap={{ scale: 0.99 }}
+                  onClick={() => onFriendClick(friend)}
+                >
+                  <Card className="p-4 bg-card hover:bg-secondary/20 transition-colors cursor-pointer">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4 flex-1">
+                        {/* Rank Badge */}
+                        {friend.rank && (
+                          <div className="flex items-center justify-center w-8">
+                            <div className="bg-primary/10 rounded-full w-7 h-7 flex items-center justify-center">
+                              <Trophy className="w-4 h-4 text-primary" />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Avatar with Status Indicator */}
+                        <div className="relative flex-shrink-0">
+                          <Avatar className="w-14 h-14 border-2 border-border/50">
+                            <div
+                              className={`w-full h-full bg-gradient-to-br ${friend.avatarColor} flex items-center justify-center`}
+                            >
+                              <span className="text-white text-[16px]">
+                                {friend.initials}
+                              </span>
+                            </div>
+                          </Avatar>
+                          {/* Status Light */}
+                          <motion.div
+                            className={`absolute -bottom-0.5 -right-0.5 w-5 h-5 ${status.color} rounded-full border-2 border-background shadow-md`}
+                            animate={{
+                              scale:
+                                friend.caffeineLevel >= 300 ? [1, 1.2, 1] : 1,
+                              opacity:
+                                friend.caffeineLevel >= 300 ? [1, 0.7, 1] : 1,
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat:
+                                friend.caffeineLevel >= 300 ? Infinity : 0,
+                              ease: "easeInOut",
+                            }}
+                          />
+                        </div>
+
+                        {/* Name and Info */}
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-0.5">
+                            <span className="text-[16px]">{friend.name}</span>
+                            {friend.trend === "up" && (
+                              <TrendingUp className="w-3.5 h-3.5 text-red-500" />
+                            )}
+                            {friend.trend === "down" && (
+                              <TrendingDown className="w-3.5 h-3.5 text-green-500" />
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            {friend.lastDrink} • {status.label}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Caffeine Level */}
+                      <div className="text-right flex-shrink-0 ml-3">
+                        <div className="flex items-baseline space-x-1">
+                          <motion.span
+                            className={`text-[24px] ${status.textColor}`}
+                            key={friend.caffeineLevel}
+                            initial={{ scale: 1.2 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", stiffness: 200 }}
+                          >
+                            {friend.caffeineLevel}
+                          </motion.span>
+                          <span className="text-xs text-muted-foreground">
+                            mg
+                          </span>
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className={`mt-1 ${status.bgColor} ${status.textColor} ${status.borderColor} text-[10px] px-2 py-0`}
+                        >
+                          {status.label}
+                        </Badge>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Legend Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.5 }}
+        >
+          <Card className="p-4 bg-gradient-to-br from-secondary/30 to-secondary/10">
+            <h4 className="text-sm mb-3">카페인 상태 표시</h4>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 bg-green-500 rounded-full" />
+                <span className="text-xs text-muted-foreground">
+                  안전 (0-99mg)
+                </span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 bg-yellow-500 rounded-full" />
+                <span className="text-xs text-muted-foreground">
+                  주의 (100-299mg)
+                </span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+                <span className="text-xs text-muted-foreground">
+                  높음 (300mg 이상)
+                </span>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+
+        <div className="h-6" />
+      </div>
+
+      {/* Add Friend Dialog */}
+      <Dialog open={showAddFriend} onOpenChange={setShowAddFriend}>
+        <DialogContent className="w-[calc(100%-2rem)] max-w-md rounded-2xl p-0 gap-0">
+          <div className="flex flex-col">
+            {/* Header */}
+            <DialogHeader className="px-6 pt-6 pb-4 space-y-2">
+              <DialogTitle className="text-[20px]">친구 추가</DialogTitle>
+              <DialogDescription className="text-[14px]">
+                친구의 아이디를 입력하여 친구를 추가하세요.
+              </DialogDescription>
+            </DialogHeader>
+
+            {/* Content */}
+            <div className="px-6 pb-6 space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="friend-id" className="text-[14px]">
+                  친구 아이디
+                </Label>
+                <Input
+                  id="friend-id"
+                  placeholder="친구의 아이디를 입력하세요"
+                  className="h-12 text-[16px] rounded-xl"
+                  value={friendId}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setFriendId(e.target.value)
+                  }
+                  onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                    if (e.key === "Enter") {
+                      handleAddFriend();
+                    }
+                  }}
+                  autoFocus
+                />
+              </div>
+
+              {/* Buttons */}
+              <div className="flex flex-col space-y-2 pt-2">
+                <Button
+                  className="w-full h-12 rounded-xl text-[16px]"
+                  onClick={handleAddFriend}
+                  disabled={!friendId.trim()}
+                >
+                  친구 추가
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full h-12 rounded-xl text-[16px]"
+                  onClick={() => {
+                    setShowAddFriend(false);
+                    setFriendId("");
+                  }}
+                >
+                  취소
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

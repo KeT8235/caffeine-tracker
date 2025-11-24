@@ -1,0 +1,127 @@
+/* 공통 레이아웃 스타일 */
+.screenContainer {
+  @apply flex flex-col h-full bg-background overflow-y-auto;
+}
+
+.stickyHeader {
+  @apply sticky top-0 bg-background/95 backdrop-blur-sm z-10 px-6 pt-6 pb-4 border-b border-border/50;
+}
+
+.headerTitle {
+  @apply text-2xl font-bold;
+}
+
+.headerSubtitle {
+  @apply text-sm text-muted-foreground;
+}
+
+/* 카드 스타일 */
+.statusCard {
+  @apply border-2 transition-all duration-200;
+}
+
+.statusCardSafe {
+  @apply bg-green-500/10 border-green-500/20;
+}
+
+.statusCardCaution {
+  @apply bg-yellow-500/10 border-yellow-500/20;
+}
+
+.statusCardHigh {
+  @apply bg-red-500/10 border-red-500/20;
+}
+
+/* 버튼 스타일 */
+.actionButton {
+  @apply w-full transition-all duration-200 hover:scale-105;
+}
+
+.iconButton {
+  @apply p-2 rounded-full hover:bg-accent transition-colors;
+}
+
+/* 텍스트 스타일 */
+.sectionTitle {
+  @apply text-lg font-semibold mb-4;
+}
+
+.labelText {
+  @apply text-sm font-medium text-muted-foreground;
+}
+
+.valueText {
+  @apply text-2xl font-bold;
+}
+
+/* 애니메이션 */
+.fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 그리드 레이아웃 */
+.gridContainer {
+  @apply grid gap-4;
+}
+
+.gridCols2 {
+  @apply grid-cols-1 md:grid-cols-2;
+}
+
+.gridCols3 {
+  @apply grid-cols-1 md:grid-cols-3;
+}
+
+/* 플렉스 레이아웃 */
+.flexBetween {
+  @apply flex items-center justify-between;
+}
+
+.flexCenter {
+  @apply flex items-center justify-center;
+}
+
+.flexCol {
+  @apply flex flex-col;
+}
+
+/* 간격 */
+.spacing4 {
+  @apply space-y-4;
+}
+
+.spacing6 {
+  @apply space-y-6;
+}
+
+.padding6 {
+  @apply p-6;
+}
+
+.paddingX6 {
+  @apply px-6;
+}
+
+.paddingY4 {
+  @apply py-4;
+}
+
+/* 반응형 */
+.mobileOnly {
+  @apply block md:hidden;
+}
+
+.desktopOnly {
+  @apply hidden md:block;
+}

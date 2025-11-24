@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+.env
+.git
+.gitignore
+*.md
+.vscode
+dist
+build
+.DS_Store
+*.zip
+backup_ignored_files.py
+ignored_files_backup_*.zip

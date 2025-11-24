@@ -1,0 +1,79 @@
+/* 회원가입 폼 스타일 */
+
+.signupDialog {
+  @apply max-w-[90%] rounded-3xl p-6;
+}
+
+.signupHeader {
+  @apply text-center;
+}
+
+.signupTitle {
+  @apply text-2xl font-bold mb-2;
+}
+
+.signupDescription {
+  @apply text-muted-foreground text-sm;
+}
+
+.signupForm {
+  @apply space-y-5 mt-4;
+}
+
+.formField {
+  @apply space-y-2;
+}
+
+.formLabel {
+  @apply text-sm font-medium;
+}
+
+.formInput {
+  @apply h-12 rounded-xl border-2 transition-all duration-200;
+  @apply focus:border-primary focus:ring-2 focus:ring-primary/20;
+}
+
+.formSelect {
+  @apply h-12 rounded-xl border-2;
+}
+
+.submitButton {
+  @apply w-full h-12 rounded-xl bg-primary hover:bg-primary/90 mt-6;
+  @apply transition-all duration-200 hover:scale-105;
+}
+
+/* 유효성 검사 스타일 */
+.inputError {
+  @apply border-red-500 focus:border-red-500 focus:ring-red-500/20;
+}
+
+.inputSuccess {
+  @apply border-green-500 focus:border-green-500 focus:ring-green-500/20;
+}
+
+/* 성별 선택 스타일 */
+.genderOption {
+  @apply flex items-center gap-2 p-3 rounded-lg cursor-pointer;
+  @apply transition-all duration-200;
+  @apply hover:bg-accent;
+}
+
+.genderOptionSelected {
+  @apply bg-primary/10 border-2 border-primary;
+}
+
+/* 날짜 입력 스타일 */
+.dateInput {
+  @apply h-12 rounded-xl;
+}
+
+.dateInput::-webkit-calendar-picker-indicator {
+  @apply cursor-pointer opacity-60 hover:opacity-100;
+}
+
+/* 반응형 */
+@media (min-width: 640px) {
+  .signupDialog {
+    @apply max-w-md;
+  }
+}
