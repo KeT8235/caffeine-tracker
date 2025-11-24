@@ -2,7 +2,8 @@
 """
 gitignore에 지정된 파일들만 압축하는 스크립트
 """
-
+#pip install pathspec
+#python backup_ignored_files.py
 import os
 import zipfile
 import pathspec

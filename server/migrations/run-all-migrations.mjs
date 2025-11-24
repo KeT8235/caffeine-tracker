@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 // Dump20251119 폴더 경로
-const dumpDir = path.join(__dirname, '../../Dump20251119');
+const dumpDir = path.join(__dirname, '../../Dump');
 
 // Dump 폴더 존재 여부 확인
 if (!fs.existsSync(dumpDir)) {
@@ -24,7 +24,7 @@ if (!fs.existsSync(dumpDir)) {
 const files = fs.readdirSync(dumpDir).filter(f => f.endsWith('.sql'));
 
 if (files.length === 0) {
-  console.log('[알림] Dump20251119 폴더에 .sql 파일이 없습니다.');
+  console.log('[알림] Dump 폴더에 .sql 파일이 없습니다.');
   process.exit(0);
 }
 
