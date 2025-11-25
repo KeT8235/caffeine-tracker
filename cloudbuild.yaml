@@ -1,0 +1,19 @@
+steps:
+  # 1. Backend Docker 이미지 빌드
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/caffeine-server', './server']
+
+  # 2. Frontend Docker 이미지 빌드
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/caffeine-web', '.']
+
+  # 3. 이미지 푸시 (Container Registry)
+  # Artifact Registry를 사용하는 경우: region-docker.pkg.dev/$PROJECT_ID/repo-name/image-name 형식으로 변경 필요
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/caffeine-server']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/caffeine-web']
+
+images:
+  - 'gcr.io/$PROJECT_ID/caffeine-server'
+  - 'gcr.io/$PROJECT_ID/caffeine-web'

@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
-// Dump20251119 폴더 경로
+// Dump 폴더 경로
 const dumpDir = path.join(__dirname, '../../Dump');
 
 // Dump 폴더 존재 여부 확인

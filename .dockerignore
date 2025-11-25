@@ -11,3 +11,5 @@ build
 *.zip
 backup_ignored_files.py
 ignored_files_backup_*.zip
+server/
+Dump/
