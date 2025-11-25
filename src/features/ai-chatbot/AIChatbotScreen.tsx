@@ -259,11 +259,11 @@ export function AIChatbotScreen({ onBack }: AIChatbotScreenProps) {
           onChange={e => setModelType(e.target.value as 'free' | 'paid')}
           className="rounded-full border px-3 py-1 text-sm bg-background focus:outline-none"
         >
-          <option value="free">무료 (x-ai/grok-4.1-fast)</option>
+          <option value="free">무료 (Grok-4.1-fast)</option>
           <option value="paid">유료 (GPT-4o)</option>
         </select>
         <span className="text-xs text-muted-foreground ml-2">
-          {modelType === 'free' ? '빠른 응답, 무료' : '최고 품질, 유료' }
+          {modelType === 'free' ? '일반 품질 응답, 무료' : '최고 품질 응답, 유료' }
         </span>
       </div>
       {/* Header */}
