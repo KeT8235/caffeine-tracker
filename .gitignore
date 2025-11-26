@@ -59,7 +59,6 @@ docker-compose.override.yml
 *.db
 *.sqlite
 *.sqlite3
-Dump
 
 # Python (for backup script)
 __pycache__/
