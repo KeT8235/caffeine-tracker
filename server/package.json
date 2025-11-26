@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Backend API for AI Caffeine Advisor",
   "main": "dist/index.js",
-  "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc && tsc-alias",

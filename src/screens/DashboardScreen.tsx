@@ -58,7 +58,8 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
     setDeletingId(entryId);
     try {
       const token = getToken();
-      await fetch(`http://localhost:3002/api/caffeine/history/${entryId}`, {
+      const API_BASE = import.meta.env.VITE_API_URL || '/api';
+      await fetch(`${API_BASE}/caffeine/history/${entryId}`, {
         method: 'DELETE',
         credentials: 'include',
         headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -77,7 +78,8 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
     setIsResetting(true);
     try {
       const token = getToken();
-      await fetch('http://localhost:3002/api/caffeine/today', {
+      const API_BASE = import.meta.env.VITE_API_URL || '/api';
+      await fetch(`${API_BASE}/caffeine/today`, {
         method: 'DELETE',
         credentials: 'include',
         headers: token ? { Authorization: `Bearer ${token}` } : {},

@@ -361,7 +361,7 @@ export function OnboardingScreen({
 
       {/* Signup Dialog */}
       <Dialog open={showSignup} onOpenChange={setShowSignup}>
-        <DialogContent className="max-w-[90%] rounded-3xl p-6">
+        <DialogContent className="max-w-[90%] max-h-[85vh] overflow-y-auto rounded-3xl p-6">
           <DialogHeader>
             <DialogTitle className="text-center">회원가입</DialogTitle>
             <DialogDescription className="text-center text-muted-foreground">
@@ -369,80 +369,80 @@ export function OnboardingScreen({
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={handleSignup} className="space-y-5 mt-4">
-            <div className="space-y-2">
+          <form onSubmit={handleSignup} className="space-y-3 mt-3">
+            <div className="space-y-1">
               <Label htmlFor="signup-id">아이디</Label>
               <Input
                 id="signup-id"
                 type="text"
                 placeholder="아이디를 입력하세요"
-                className="h-12 rounded-xl"
+                className="h-11 rounded-xl"
                 value={signupForm.id}
                 onChange={(e) =>
                   setSignupForm({ ...signupForm, id: e.target.value })
                 }
                 required
               />
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-xs text-gray-500">
                 최소 4자 이상 입력해주세요
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="signup-password">비밀번호</Label>
               <Input
                 id="signup-password"
                 type="password"
                 placeholder="비밀번호를 입력하세요"
-                className="h-12 rounded-xl"
+                className="h-11 rounded-xl"
                 value={signupForm.password}
                 onChange={(e) =>
                   setSignupForm({ ...signupForm, password: e.target.value })
                 }
                 required
               />
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-xs text-gray-500">
                 최소 6자 이상 입력해주세요
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="signup-name">이름</Label>
               <Input
                 id="signup-name"
                 type="text"
                 placeholder="이름을 입력하세요"
-                className="h-12 rounded-xl"
+                className="h-11 rounded-xl"
                 value={signupForm.name}
                 onChange={(e) =>
                   setSignupForm({ ...signupForm, name: e.target.value })
                 }
                 required
               />
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-xs text-gray-500">
                 최소 2자 이상 입력해주세요
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="signup-birthdate">생년월일</Label>
               <Input
                 id="signup-birthdate"
                 type="text"
                 inputMode="numeric"
                 placeholder="생년월일 8자리 (예: 19901231)"
-                className="h-12 rounded-xl"
+                className="h-11 rounded-xl"
                 value={signupForm.birthDate}
                 onChange={handleBirthDateChange}
                 maxLength={10}
                 required
               />
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-xs text-gray-500">
                 만 14세 이상만 가입 가능합니다
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="signup-gender">성별</Label>
               <Select
                 value={signupForm.gender}
@@ -450,7 +450,7 @@ export function OnboardingScreen({
                   setSignupForm({ ...signupForm, gender: value })
                 }
               >
-                <SelectTrigger className="h-12 rounded-xl" id="signup-gender">
+                <SelectTrigger className="h-11 rounded-xl" id="signup-gender">
                   <SelectValue placeholder="성별을 선택하세요" />
                 </SelectTrigger>
                 <SelectContent>
@@ -458,18 +458,18 @@ export function OnboardingScreen({
                   <SelectItem value="female">여자</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-xs text-gray-500">
                 카페인 권장량 계산에 사용됩니다
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor="signup-weight">몸무게</Label>
               <Input
                 id="signup-weight"
                 type="number"
                 placeholder="몸무게를 입력하세요 (kg)"
-                className="h-12 rounded-xl"
+                className="h-11 rounded-xl"
                 value={signupForm.weight_kg || ""}
                 onChange={(e) =>
                   setSignupForm({
@@ -483,7 +483,7 @@ export function OnboardingScreen({
                 max="200"
                 required
               />
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-xs text-gray-500">
                 카페인 권장량 계산에 사용됩니다 (30-200kg)
               </p>
             </div>
@@ -496,7 +496,7 @@ export function OnboardingScreen({
 
             <Button
               type="submit"
-              className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 mt-6"
+              className="w-full h-11 rounded-xl bg-primary hover:bg-primary/90 mt-4"
             >
               가입하기
             </Button>

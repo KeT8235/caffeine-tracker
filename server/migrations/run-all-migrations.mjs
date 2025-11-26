@@ -1,5 +1,5 @@
 // 모든 SQL 파일을 실행하는 마이그레이션 스크립트 (ES Module)
-// 실행: node migrations/run-all-migrations.mjs
+// 실행: ㅡㅛㅛ
 
 import fs from 'fs';
 import path from 'path';
