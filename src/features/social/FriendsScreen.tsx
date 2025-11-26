@@ -86,9 +86,7 @@ export function FriendsScreen({ onBack, onFriendClick }: FriendsScreenProps) {
 
   const loadFriends = async () => {
     try {
-      console.log("친구 목록 로드 시작...");
       const data = await friendAPI.getFriends();
-      console.log("친구 목록 로드 완료:", data.friends);
       setFriends(data.friends);
     } catch (error: any) {
       console.error("친구 목록 로드 실패:", error);

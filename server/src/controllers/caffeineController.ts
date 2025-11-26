@@ -60,9 +60,6 @@ export const addCaffeineIntake = async (req: Request, res: Response) => {
     const memberId = (req as any).user.memberId;
     const { menu_id, brand_name, menu_name, caffeine_mg, temp }: AddCaffeineRequest = req.body;
 
-    // 로그로 실제 값 확인
-    console.log('[addCaffeineIntake] payload:', { menu_id, temp, brand_name, menu_name, caffeine_mg });
-
     if (!brand_name || !menu_name || !caffeine_mg) {
       return res.status(400).json({ error: "필수 정보를 입력해주세요." });
     }

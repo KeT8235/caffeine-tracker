@@ -256,8 +256,6 @@ export function ProfileScreen({ onBack, onLogout }: ProfileScreenProps) {
         age: editForm.birthDate, // DATE 타입으로 생년월일 전송
       };
 
-      console.log("Sending update data:", updatedData);
-
       await profileAPI.updateProfile(updatedData);
       
       // 프로필 다시 로드

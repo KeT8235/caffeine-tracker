@@ -10,11 +10,11 @@ import routes from "@/routes";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 
 // 미들웨어
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:3000",
+  origin: "*",
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' })); // 프로필 사진 업로드를 위해 limit 증가
@@ -42,6 +42,4 @@ app.use(
 );
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  console.log(`📊 API endpoint: http://localhost:${PORT}/api`);
 });

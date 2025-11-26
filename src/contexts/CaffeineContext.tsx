@@ -90,13 +90,6 @@ export function CaffeineProvider({ children }: { children: ReactNode }) {
         
         // 디버깅 로그
         const calculatedIntake = calculateDecayedIntake(todayEntries, newNow);
-        console.log('[CaffeineContext] Data Fetched:', {
-          entriesCount: todayEntries.length,
-          totalCaffeine: todayEntries.reduce((sum, e) => sum + e.caffeine, 0),
-          calculatedIntake,
-          dailyLimit: caffeineInfo.max_caffeine,
-          timestamp: newNow.toISOString()
-        });
       } catch (error) {
         console.error("Failed to load caffeine data:", error);
         resetDailyData(new Date().toDateString());

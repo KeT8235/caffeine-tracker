@@ -161,8 +161,6 @@ export function AIChatbotScreen({ onBack }: AIChatbotScreenProps) {
     // Show typing indicator
     setIsTyping(true);
 
-    // OpenRouter API 호출
-    console.log('[AI Chat] OpenRouter API 호출 시작');
     try {
       // DB에서 음료 기록 가져오기
       const { caffeineAPI, profileAPI } = await import("@/lib/api");
@@ -200,10 +198,8 @@ export function AIChatbotScreen({ onBack }: AIChatbotScreenProps) {
         drinkHistory: drinkHistoryText || "No recent drinks.",
       };
       const messagesForAI: ChatMessage[] = buildMessagesWithSystemPrompt(params, [messageText]);
-      console.log('[AI Chat] 메시지 준비 완료, API 호출 중...');
       // 모델 타입 전달
       const aiReply = await fetchOpenRouterChat(messagesForAI, modelType);
-      console.log('[AI Chat] API 응답 성공:', aiReply);
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: aiReply,

@@ -58,7 +58,7 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
     setDeletingId(entryId);
     try {
       const token = getToken();
-      await fetch(`http://localhost:3002/api/caffeine/history/${entryId}`, {
+      await fetch(`/api/caffeine/history/${entryId}`, {
         method: 'DELETE',
         credentials: 'include',
         headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -77,7 +77,7 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
     setIsResetting(true);
     try {
       const token = getToken();
-      await fetch('http://localhost:3002/api/caffeine/today', {
+      await fetch('/api/caffeine/today', {
         method: 'DELETE',
         credentials: 'include',
         headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -92,12 +92,6 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
   
   const percentage = useMemo(() => {
     const percent = (currentIntake / dailyLimit) * 100;
-    console.log('[DashboardScreen] Percentage Calculation:', {
-      currentIntake,
-      dailyLimit,
-      percentage: percent,
-      timestamp: new Date().toISOString()
-    });
     return percent;
   }, [currentIntake, dailyLimit]);
   

@@ -163,9 +163,6 @@ export function TrackingScreen({ onBack }: TrackingScreenProps) {
     const menuId = selectedMenu?.menu_id || null;
     const temp = selectedMenu?.temp || null;
 
-    // 로그로 실제 값 확인
-    console.log('[addCaffeine] payload:', { menu_id: menuId, temp, brandName, menuName, amount });
-
     addCaffeine({
       brand: brandName,
       drink: menuName,

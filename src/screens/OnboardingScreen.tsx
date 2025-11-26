@@ -62,8 +62,6 @@ export function OnboardingScreen({
     e.preventDefault();
     setLoginError(""); // 에러 메시지 초기화
 
-    console.log("로그인 시도:", loginForm);
-
     // 유효성 검사
     if (!loginForm.username || loginForm.username.length < 4) {
       setLoginError("아이디를 입력해주세요.");
@@ -81,8 +79,6 @@ export function OnboardingScreen({
         username: loginForm.username,
         password: loginForm.password,
       });
-
-      console.log("로그인 성공:", response);
 
       // 토큰 저장
       setToken(response.token);
@@ -127,8 +123,6 @@ export function OnboardingScreen({
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setSignupError(""); // 에러 메시지 초기화
-
-    console.log("회원가입 시도:", signupForm);
 
     // 유효성 검사
     if (!signupForm.id || signupForm.id.length < 4) {
@@ -175,8 +169,6 @@ export function OnboardingScreen({
       return;
     }
 
-    console.log("유효성 검사 통과, API 요청 시작");
-
     try {
       // API를 통한 회원가입
       const response = await authAPI.signup({
@@ -187,8 +179,6 @@ export function OnboardingScreen({
         gender: signupForm.gender === "male" ? "남자" : "여자",
         weight_kg: signupForm.weight_kg,
       });
-
-      console.log("회원가입 성공:", response);
 
       // 토큰 저장
       setToken(response.token);
@@ -304,7 +294,7 @@ export function OnboardingScreen({
 
       {/* Login Dialog */}
       <Dialog open={showLogin} onOpenChange={setShowLogin}>
-        <DialogContent className="max-w-[90%] rounded-3xl p-6">
+        <DialogContent className="max-w-[90%] max-h-[90vh] h-auto overflow-y-auto rounded-3xl p-4 sm:p-6 sm:max-h-[600px]">
           <DialogHeader>
             <DialogTitle className="text-center">로그인</DialogTitle>
             <DialogDescription className="text-center text-muted-foreground">
@@ -361,7 +351,7 @@ export function OnboardingScreen({
 
       {/* Signup Dialog */}
       <Dialog open={showSignup} onOpenChange={setShowSignup}>
-        <DialogContent className="max-w-[90%] rounded-3xl p-6">
+        <DialogContent className="max-w-[90%] max-h-[90vh] h-auto overflow-y-auto rounded-3xl p-4 sm:p-6 sm:max-h-[600px]">
           <DialogHeader>
             <DialogTitle className="text-center">회원가입</DialogTitle>
             <DialogDescription className="text-center text-muted-foreground">

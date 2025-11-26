@@ -10,6 +10,9 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 3002
+EXPOSE 8080
+
+# 작업 디렉토리
+WORKDIR /app
 
 CMD ["npm", "start"]

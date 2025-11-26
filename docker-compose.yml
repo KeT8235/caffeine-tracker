@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   frontend:
-    build: .
+    image: ektlakwhgdk/cofm-main-frontend:latest
     ports:
       - "80:80"
     depends_on:
@@ -10,7 +10,7 @@ services:
     restart: always
 
   backend:
-    build: ./server
+    image: ektlakwhgdk/cofm-main-backend2:latest
     ports:
       - "${PORT}:${PORT}"
     environment:

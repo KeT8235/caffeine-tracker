@@ -59,8 +59,6 @@ export const updateProfile = async (req: Request, res: Response) => {
   try {
     const memberId = (req as any).user.memberId;
     const { name, weight_kg, gender, age, profile_photo, language_code, max_caffeine } = req.body;
-    
-    console.log("Update profile request:", { memberId, name, weight_kg, gender, age, profile_photo: profile_photo ? 'provided' : 'not provided', language_code });
 
     // 회원 기본 정보 업데이트
     const memberUpdates: string[] = [];
@@ -116,8 +114,6 @@ export const updateProfile = async (req: Request, res: Response) => {
         "SELECT * FROM members_caffeine WHERE member_id = ?",
         [memberId],
       );
-      
-      console.log("Existing caffeine record:", existingRecord);
 
       // age(생년월일)로부터 나이 계산
       let calculatedAge = null;
@@ -126,7 +122,6 @@ export const updateProfile = async (req: Request, res: Response) => {
           const birthYear = new Date(age).getFullYear();
           const currentYear = new Date().getFullYear();
           calculatedAge = currentYear - birthYear + 1; // 한국 나이
-          console.log("Calculated age:", calculatedAge, "from birth date:", age);
         } catch (e) {
           console.error("Error calculating age:", e);
         }
@@ -148,7 +143,6 @@ export const updateProfile = async (req: Request, res: Response) => {
         // 최소/최대 제한
         maxCaffeine = Math.max(100, Math.min(maxCaffeine, 400));
       }
-      console.log("Calculated/Selected max caffeine:", maxCaffeine);
 
       if (Array.isArray(existingRecord) && existingRecord.length > 0) {
         // 레코드가 있으면 UPDATE
@@ -177,16 +171,11 @@ export const updateProfile = async (req: Request, res: Response) => {
         if (updates.length > 0) {
           params.push(memberId);
 
-          console.log("Executing UPDATE:", `UPDATE members_caffeine SET ${updates.join(", ")}, updated_at = NOW() WHERE member_id = ?`, params);
-          
           await pool.query(
             `UPDATE members_caffeine SET ${updates.join(", ")}, updated_at = NOW() WHERE member_id = ?`,
             params,
           );
-          
-          console.log("UPDATE successful");
         } else {
-          console.log("No fields to update");
         }
       } else {
         // 레코드가 없으면 INSERT
@@ -198,15 +187,11 @@ export const updateProfile = async (req: Request, res: Response) => {
           maxCaffeine,
         ];
         
-        console.log("Executing INSERT:", insertParams);
-        
         await pool.query(
           `INSERT INTO members_caffeine (member_id, weight_kg, gender, age, max_caffeine, current_caffeine, updated_at) 
            VALUES (?, ?, ?, ?, ?, 0, NOW())`,
           insertParams,
         );
-        
-        console.log("INSERT successful");
       }
     }
 

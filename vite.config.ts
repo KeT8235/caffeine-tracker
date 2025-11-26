@@ -50,14 +50,14 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    outDir: 'build',
+    outDir: 'dist',
   },
   server: {
     port: 3000,
     open: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:3002',
+        target: 'http://localhost:8080',
         changeOrigin: true,
       },
     },

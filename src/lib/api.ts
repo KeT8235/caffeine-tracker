@@ -35,14 +35,11 @@ async function apiRequest<T>(
   }
 
   const url = `${API_BASE_URL}${endpoint}`;
-  console.log("API 요청:", url, options);
 
   const response = await fetch(url, {
     ...options,
     headers,
   });
-
-  console.log("API 응답:", response.status, response.statusText);
 
   if (!response.ok) {
     const error = await response
@@ -53,7 +50,6 @@ async function apiRequest<T>(
   }
 
   const data = await response.json();
-  console.log("API 응답 데이터:", data);
   return data;
 }
 

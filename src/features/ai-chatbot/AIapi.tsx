@@ -18,9 +18,7 @@ export async function fetchOpenRouterChat(
   messages: ChatMessage[],
   modelType: 'free' | 'paid' = 'free'
 ): Promise<string> {
-  console.log('[AIapi] fetchOpenRouterChat 호출됨');
   const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
-  console.log('[AIapi] API 키 존재 여부:', !!OPENROUTER_API_KEY);
 
   if (!OPENROUTER_API_KEY) {
     console.error('[AIapi] API 키가 설정되지 않음');
@@ -36,7 +34,6 @@ export async function fetchOpenRouterChat(
   // modelType 파라미터를 직접 사용
   const model = modelType === 'paid' ? DEFAULT_PAID_MODEL : DEFAULT_FREE_MODEL;
 
-  console.log(`[AIapi] fetch 요청 시작... 모델: ${model}`);
   const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -49,8 +46,6 @@ export async function fetchOpenRouterChat(
     }),
   });
   
-  console.log('[AIapi] fetch 응답 수신, 상태:', res.status);
-  
   if (!res.ok) {
     const errorText = await res.text();
     console.error('[AIapi] API 오류:', res.status, errorText);
@@ -58,13 +53,11 @@ export async function fetchOpenRouterChat(
   }
   
   const data = await res.json();
-  console.log('[AIapi] 응답 데이터:', data);
   if (!data.choices || !data.choices[0]?.message?.content) {
     console.error('[AIapi] 잘못된 응답 형식:', data);
     throw new Error('OpenRouter 응답이 올바르지 않습니다.');
   }
   
   const content = data.choices[0].message.content;
-  console.log('[AIapi] 최종 응답:', content);
   return content;
 }
