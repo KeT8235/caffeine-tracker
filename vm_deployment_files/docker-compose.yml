@@ -2,17 +2,15 @@ version: '3.8'
 
 services:
   web:
-    image: ket8235/caffeine-web:latest # Docker Hub에서 이미지를 가져옵니다.
+    image: ket8235/caffeine-web:latest
     ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - "8080:80" # 외부 8080 포트를 컨테이너 80 포트와 연결
+    restart: always
     depends_on:
       - backend
-    restart: always
 
   backend:
-    image: ket8235/caffeine-server:latest # Docker Hub에서 이미지를 가져옵니다.
+    image: ket8235/caffeine-server:latest
     environment:
       - DB_HOST=db
       - DB_USER=${DB_USER}

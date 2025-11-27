@@ -34,6 +34,7 @@ export function OnboardingScreen({
   const [signupForm, setSignupForm] = useState<SignupForm>({
     id: "",
     password: "",
+    confirmPassword: "",
     name: "",
     birthDate: "",
     gender: "",
@@ -138,6 +139,11 @@ export function OnboardingScreen({
 
     if (!signupForm.password || signupForm.password.length < 6) {
       toast.error("비밀번호는 6자 이상이어야 합니다.");
+      return;
+    }
+
+    if (signupForm.password !== signupForm.confirmPassword) {
+      toast.error("비밀번호가 일치하지 않습니다.");
       return;
     }
 
@@ -404,6 +410,31 @@ export function OnboardingScreen({
               <p className="text-xs text-gray-500">
                 최소 6자 이상 입력해주세요
               </p>
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="signup-confirm-password">비밀번호 확인</Label>
+              <Input
+                id="signup-confirm-password"
+                type="password"
+                placeholder="비밀번호를 다시 입력하세요"
+                className="h-11 rounded-xl"
+                value={signupForm.confirmPassword}
+                onChange={(e) =>
+                  setSignupForm({
+                    ...signupForm,
+                    confirmPassword: e.target.value,
+                  })
+                }
+                required
+              />
+              {signupForm.password &&
+                signupForm.confirmPassword &&
+                signupForm.password !== signupForm.confirmPassword && (
+                  <p className="text-xs text-red-500">
+                    비밀번호가 일치하지 않습니다
+                  </p>
+                )}
             </div>
 
             <div className="space-y-1">

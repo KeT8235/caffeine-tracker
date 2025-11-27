@@ -15,7 +15,7 @@ export const removeToken = (): void => {
 };
 
 // API 요청 헬퍼
-async function apiRequest<T>(
+export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<T> {

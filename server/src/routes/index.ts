@@ -35,6 +35,7 @@ import {
   getMessages,
   getChatRooms,
 } from "@/controllers/chatController";
+import { handleChat } from "@/controllers/aiController";
 import { getChallenges, claimChallenge } from "@/controllers/challengeController";
 import {
   getCurrentPoints,
@@ -84,11 +85,12 @@ router.get("/friend-requests", authenticateToken, getFriendRequests);
 router.post("/friend-requests/:requestId/accept", authenticateToken, acceptFriendRequest);
 router.post("/friend-requests/:requestId/reject", authenticateToken, rejectFriendRequest);
 
-// 채팅 라우트 (인증 필요)
+// 채팅 및 AI 라우트 (인증 필요)
 router.post("/chat/rooms", authenticateToken, getOrCreateChatRoom);
 router.get("/chat/rooms", authenticateToken, getChatRooms);
 router.post("/chat/messages", authenticateToken, sendMessage);
 router.get("/chat/rooms/:roomId/messages", authenticateToken, getMessages);
+router.post("/ai/chat", authenticateToken, handleChat);
 
 // 챌린지 라우트 (인증 필요)
 router.get("/challenges", authenticateToken, getChallenges);

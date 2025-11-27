@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 // Dump 폴더 경로
-const dumpDir = path.join(__dirname, '../../Dump');
+const dumpDir = path.join(__dirname, '../Dump');
 
 // Dump 폴더 존재 여부 확인
 if (!fs.existsSync(dumpDir)) {

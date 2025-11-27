@@ -10,7 +10,7 @@ import routes from "@/routes/index.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
 // 미들웨어
 app.use(cors({

@@ -69,6 +69,7 @@ export interface UserProfile {
 export interface SignupForm {
   id: string;
   password: string;
+  confirmPassword?: string;
   name: string;
   birthDate: string;
   gender: "male" | "female" | "";

@@ -203,17 +203,17 @@ export const sendFriendRequest = async (req: Request, res: Response) => {
     const requesterId = (req as any).user.memberId;
 
     if (!username) {
-      return res.status(400).json({ error: "친구의 이름을 입력해주세요." });
+      return res.status(400).json({ error: "친구의 아이디를 입력해주세요." });
     }
 
-    // 대상 사용자 찾기 (name으로 검색)
+    // 대상 사용자 찾기 (username으로 검색)
     const [users] = await pool.query(
-      "SELECT member_id, username, name FROM members WHERE name = ?",
+      "SELECT member_id, username, name FROM members WHERE username = ?",
       [username]
     );
 
     if (!Array.isArray(users) || users.length === 0) {
-      return res.status(404).json({ error: "해당 이름의 사용자를 찾을 수 없습니다." });
+      return res.status(404).json({ error: "해당 아이디의 사용자를 찾을 수 없습니다." });
     }
 
     const receiver = users[0] as any;
